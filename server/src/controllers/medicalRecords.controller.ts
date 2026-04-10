@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { supabase, PRESCRIPTIONS_BUCKET } from '../config/supabase';
 import { MedicalRecordQueries } from '../db/queries/medicalRecords.queries';
 import { AppError } from '../middleware/errorHandler';
@@ -45,7 +45,7 @@ export async function createRecord(req: AuthRequest, res: Response, next: NextFu
     // Handle image upload if file was attached
     if (req.file) {
       const ext = req.file.originalname.split('.').pop();
-      const fileName = `${userId}/${uuidv4()}.${ext}`;
+      const fileName = `${userId}/${randomUUID()}.${ext}`;
 
       const { error } = await supabase.storage
         .from(PRESCRIPTIONS_BUCKET)
@@ -95,7 +95,7 @@ export async function updateRecord(req: AuthRequest, res: Response, next: NextFu
 
     if (req.file) {
       const ext = req.file.originalname.split('.').pop();
-      const fileName = `${userId}/${uuidv4()}.${ext}`;
+      const fileName = `${userId}/${randomUUID()}.${ext}`;
 
       const { error } = await supabase.storage
         .from(PRESCRIPTIONS_BUCKET)
